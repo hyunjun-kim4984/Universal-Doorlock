@@ -2,12 +2,12 @@
 
 This project utilizes YOLOv5 for real-time object detection and integrates it with servo motors, LEDs, and a buzzer on a Raspberry Pi. Additionally, detected object information is stored in a CSV file for further analysis.
 
----
+
 
 ## 🚀 Project Overview  
 This project leverages Raspberry Pi to perform real-time object detection using YOLOv5. When specific objects are detected, the system activates LEDs, a buzzer, and controls a servo motor accordingly. Detected object data is logged in a CSV file for future analysis.  
 
----
+
 
 ## 🎯 Features  
 ✅ Object detection using YOLOv5  
@@ -15,7 +15,7 @@ This project leverages Raspberry Pi to perform real-time object detection using 
 ✅ CSV file logging for detected objects  
 ✅ Recognizing specific object sequences to trigger actions  
 
----
+
 
 ## 🛠️ Environment Setup  
 
