@@ -1,163 +1,108 @@
-# YOLOv5 Object Detection with Raspberry Pi
+YOLOv5 Object Detection with Raspberry Pi
+이 프로젝트는 YOLOv5를 활용하여 Raspberry Pi에서 실시간 객체 탐지를 수행합니다. 특정 객체가 탐지되면 서보 모터, LED, 부저가 작동하도록 설정하였으며, 탐지된 객체 정보는 CSV 파일에 저장되어 이후 분석에 활용됩니다.
 
-This project utilizes **YOLOv5** for real-time object detection on a **Raspberry Pi**. The system is integrated with **servo motors**, **LEDs**, and a **buzzer** to trigger actions when specific objects are detected. Detected object data is saved in a **CSV file** for further analysis.
-# 1. Project Overview
-This project leverages YOLOv5 for real-time object detection on a Raspberry Pi. The system activates LEDs, a buzzer, and controls a servo motor when specific objects are detected. It also logs detected object information into a CSV file for further analysis.
+📌 프로젝트 개요
+이 프로젝트에서는 Raspberry Pi에서 YOLOv5를 사용해 실시간 객체 탐지를 수행합니다. 특정 객체가 감지되면 LED, 부저 및 서보 모터가 동작하며, 감지된 객체의 정보는 CSV 파일에 기록됩니다.
 
-## Features
+🚀 주요 기능
+✅ 실시간 객체 탐지
 
-- Real-time object detection using **YOLOv5**.
-- GPIO control for **servo motors**, **LEDs**, and **buzzer** on the Raspberry Pi.
-- Logging detected object information to a **CSV file**.
-- Triggering actions based on specific object detections.
+YOLOv5를 활용한 실시간 객체 탐지
+✅ GPIO 제어
 
-## Requirements
+Raspberry Pi의 GPIO 핀을 통해 서보 모터, LED 및 부저 제어
+✅ CSV 저장
 
-### Hardware
-- **Raspberry Pi** (any version with GPIO support)
-- **Servo Motor**
-- **LEDs**
-- **Buzzer**
-- **Webcam** (for object detection)
-  
-### Software Dependencies
+탐지된 객체의 이름 및 신뢰도를 CSV 파일에 저장
+✅ 객체 기반 동작 트리거
 
-Run the following commands to install the necessary packages:
+특정 객체가 감지되면 사전에 설정된 동작 수행
+🛠️ 준비 사항
+💡 하드웨어
+Raspberry Pi (GPIO 지원 버전)
+서보 모터
+LED
+부저
+웹캠
+🖥️ 소프트웨어
+필요한 패키지를 다음 명령어로 설치합니다:
 
-```bash
-## 2. Features
-Object Detection: Real-time object detection using YOLOv5.
-GPIO Control: Control servo motors, LEDs, and buzzer using Raspberry Pi GPIO.
-CSV Logging: Detected object names and confidence levels are logged to a CSV file.
-Action Triggers: Recognizes specific objects and triggers predefined actions.
-## 3. Environment Setup
-(1) Install Required Packages
-Install the necessary dependencies for object detection and Raspberry Pi GPIO control:
-```
-
-```bash
-
+bash
+복사
+편집
 pip install torch torchvision torchaudio
 pip install opencv-python numpy pandas
 pip install RPi.GPIO
+🔧 환경 설정
+YOLOv5 설치
+YOLOv5 저장소를 클론하고 필요한 종속성을 설치합니다:
 
-YOLOv5 Installation
-Clone the YOLOv5 repository and install the required dependencies:
-```
-
-```bash
-(2) Download YOLOv5 and Install Dependencies
-Clone the YOLOv5 repository and install required dependencies:
-```
-
-```bash
-
+bash
+복사
+편집
 git clone https://github.com/ultralytics/yolov5.git
 cd yolov5
 pip install -r requirements.txt
-```
+⚡ GPIO 핀 연결
+다음과 같이 Raspberry Pi의 GPIO 핀에 하드웨어를 연결합니다:
 
-Setup
-GPIO Pin Connections
-4. How to Run
-(1) Run Object Detection
-Execute the following command to start object detection using the YOLOv5 model. The webcam (or other input sources) will be used for detection:
-
-```bash
-python detect.py --weights yolov5s.pt --source 0
-Options:
---weights yolov5s.pt: Specifies the YOLOv5 pre-trained model.
---source 0: Uses the webcam as the input source (you can replace 0 with a video file path).
-```
-
-(2) Raspberry Pi GPIO Pin Connections
-Connect the following components to the GPIO pins on the Raspberry Pi:
-
-Component	GPIO Pin
-Servo Motor	12
-Buzzer	13
+구성 요소	GPIO 핀 번호
+서보 모터	12
+부저	13
 LED 1	17
 LED 2	27
 LED 3	22
-How to Run
-1. Run Object Detection
-Execute the following command to start object detection:
+▶️ 실행 방법
+1. 객체 탐지 실행
+YOLOv5 모델을 사용해 객체 탐지를 시작합니다. 웹캠(또는 다른 입력 소스)을 통해 객체 탐지를 실행합니다:
 
-```bash
+bash
+복사
+편집
 python detect.py --weights yolov5s.pt --source 0
+옵션 설명
 
-Options:
+--weights yolov5s.pt : 사전 학습된 YOLOv5 모델 지정
+--source 0 : 입력 소스로 웹캠 사용 (파일 경로도 입력 가능)
+2. 객체 기반 동작 트리거
+"A" 객체 감지 시 → LED1이 켜지고 부저가 작동
+"K" 객체 감지 시 → 서보 모터가 작동하고 LED3이 켜짐
+시간 초과 시 → LED2가 켜지고 부저가 작동 후 재설정
+3. 탐지 결과 저장
+탐지된 객체 이름 및 신뢰도는 predictions.csv 파일에 저장됩니다.
+또한 YOLOv5 출력은 runs/detect/exp/ 디렉토리에 저장됩니다.
 
---weights yolov5s.pt: Specifies the YOLO model (you can use pre-trained models).
---source 0: Uses the webcam as the input source (file paths can also be specified).
-2. Trigger Actions Based on Detected Objects
-If "A" is detected:
+📝 코드 예제
+YOLOv5 객체 탐지와 Raspberry Pi GPIO 제어가 통합된 코드입니다:
 
-LED1 turns on, and the buzzer sounds.
-If "K" is detected:
-
-LED3 turns on, and the servo motor moves.
-If a time limit is exceeded:
-
-LED2 turns on, and the buzzer activates before resetting.
-3. Saving Detected Object Information
-Detected object names and confidence levels are saved in a predictions.csv file.
-
-4. Output and Logging
-Detected objects are saved in the runs/detect/exp/ directory.
-The predictions.csv file logs object names and confidence levels for further analysis.
-References
-YOLOv5 Official Documentation
-Raspberry Pi GPIO Setup
-License
-This project is licensed under the MIT License - see the LICENSE file for details.
-
-5. Working Principle
-Start Object Detection
-The YOLOv5 model is used for real-time object detection.
-It will classify objects and return predictions along with their confidence levels.
-Trigger Actions Based on Detected Objects
-Object "A" detected:
-Turn on LED1 and activate the buzzer.
-Object "K" detected:
-Turn on LED3 and move the servo motor.
-Time Limit Exceeded (e.g., no object detected for a while):
-Turn on LED2 and activate the buzzer before resetting.
-Save Detected Object Information
-All detected object names and their confidence levels are logged into a predictions.csv file.
-6. Output and Logging
-Detected objects are stored in the runs/detect/exp/ directory.
-The predictions.csv file contains logs of all detected objects, including their names and confidence scores.
-7. Code for Object Detection and GPIO Control
-Here is the Python code that integrates YOLOv5 object detection with Raspberry Pi GPIO control:
-
-```
 python
+복사
+편집
 import torch
 import RPi.GPIO as GPIO
 import time
 import pandas as pd
 import cv2
 
-# GPIO Setup
+# GPIO 설정
 GPIO.setmode(GPIO.BCM)
-GPIO.setup(12, GPIO.OUT)  # Servo motor
-GPIO.setup(13, GPIO.OUT)  # Buzzer
+GPIO.setup(12, GPIO.OUT)  # 서보 모터
+GPIO.setup(13, GPIO.OUT)  # 부저
 GPIO.setup(17, GPIO.OUT)  # LED 1
 GPIO.setup(27, GPIO.OUT)  # LED 2
 GPIO.setup(22, GPIO.OUT)  # LED 3
 
-# Load YOLOv5 model
+# YOLOv5 모델 로드
 model = torch.hub.load('ultralytics/yolov5', 'yolov5s')
 
-# Start video capture (webcam)
+# 비디오 캡처 시작
 cap = cv2.VideoCapture(0)
 
-# CSV setup
+# CSV 설정
 columns = ['Object', 'Confidence']
 predictions_df = pd.DataFrame(columns=columns)
 
-# Action functions
+# 동작 함수 정의
 def trigger_led_buzzer(led_pin, buzzer_pin):
     GPIO.output(led_pin, GPIO.HIGH)
     GPIO.output(buzzer_pin, GPIO.HIGH)
@@ -168,50 +113,68 @@ def trigger_led_buzzer(led_pin, buzzer_pin):
 def move_servo_motor(servo_pin):
     pwm = GPIO.PWM(servo_pin, 50)
     pwm.start(0)
-    pwm.ChangeDutyCycle(7)  # Move servo to a position
+    pwm.ChangeDutyCycle(7)  # 서보 모터 이동
     time.sleep(1)
     pwm.stop()
 
-# Detection loop
+# 탐지 루프 시작
 while True:
     ret, frame = cap.read()
     if not ret:
         break
     
-    # Perform detection
+    # 객체 탐지 수행
     results = model(frame)
     
-    # Parse the results
-    detected_objects = results.pandas().xywh[0]  # Get results as a pandas dataframe
+    # 결과 파싱
+    detected_objects = results.pandas().xywh[0]
     
     for _, row in detected_objects.iterrows():
         object_name = row['name']
         confidence = row['confidence']
         
-        # Log detected object to CSV
+        # 탐지된 객체 정보 CSV에 저장
         predictions_df = predictions_df.append({'Object': object_name, 'Confidence': confidence}, ignore_index=True)
         
         if object_name == "A":
-            trigger_led_buzzer(17, 13)  # Turn on LED1 and buzzer
+            trigger_led_buzzer(17, 13)  # LED1 + 부저 작동
         elif object_name == "K":
-            move_servo_motor(12)  # Move servo motor
-            GPIO.output(22, GPIO.HIGH)  # Turn on LED3
+            move_servo_motor(12)  # 서보 모터 작동
+            GPIO.output(22, GPIO.HIGH)  # LED3 켜기
             
-    # Save to CSV after each frame
+    # CSV 파일에 저장
     predictions_df.to_csv('predictions.csv', index=False)
     
-    # Display the frame with detections
+    # 화면 출력
     cv2.imshow('Object Detection', results.render()[0])
     
-    # Exit condition
+    # 종료 조건 (q 입력 시 종료)
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
-```
-# Cleanup
+
+# 종료 처리
 cap.release()
 cv2.destroyAllWindows()
 GPIO.cleanup()
-8. References
-YOLOv5 Official Documentation: https://github.com/ultralytics/yolov5
-Raspberry Pi GPIO Setup: https://www.raspberrypi.org/documentation/usage/gpio/
-This code integrates YOLOv5 object detection with GPIO components on the Raspberry Pi, enabling actions like lighting LEDs, sounding a buzzer, and controlling a servo motor based on detected objects. Detected object data is saved to a CSV file for further analysis.
+📂 디렉토리 구조
+복사
+편집
+├── yolov5
+│   ├── detect.py
+│   ├── runs/
+│   ├── weights/
+│   ├── predictions.csv
+├── README.md
+📎 참고 자료
+YOLOv5 공식 문서
+Raspberry Pi GPIO 설정
+📄 라이선스
+이 프로젝트는 MIT 라이선스에 따라 배포됩니다. 자세한 내용은 LICENSE 파일을 참조하세요.
+
+✅ 프로젝트 요약
+YOLOv5로 실시간 객체 탐지
+객체 이름 및 신뢰도 반환
+특정 객체 탐지 시 GPIO를 통해 하드웨어 동작
+탐지 결과를 CSV에 저장 및 화면 출력
+🚀 YOLOv5와 Raspberry Pi를 활용한 객체 탐지 프로젝트가 성공적으로 동작합니다! 😎
+필요한 추가 수정 사항이나 궁금한 점이 있으면 알려주세요! 😄
