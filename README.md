@@ -39,3 +39,76 @@ This project integrates the YOLOv5 object detection model with Raspberry Pi GPIO
    ```bash
    git clone https://github.com/yourusername/your-repo.git
    cd your-repo
+Set Up a Virtual Environment (Optional but Recommended):
+
+bash
+복사
+python -m venv venv
+source venv/bin/activate  # On Windows use: venv\Scripts\activate
+Install Dependencies:
+
+bash
+복사
+pip install -r requirements.txt
+Install YOLOv5 Dependencies:
+
+Follow the official YOLOv5 installation instructions if additional dependencies are required.
+
+Usage
+To run the script with default settings, simply execute:
+
+bash
+복사
+python your_script.py
+Command-Line Options
+You can customize the behavior using various command-line arguments. Some examples include:
+
+Specify a Custom Model:
+
+bash
+복사
+python your_script.py --weights path/to/your_model.pt
+Change the Input Source:
+
+bash
+복사
+python your_script.py --source path/to/your/image_or_video
+Adjust Inference Image Size:
+
+bash
+복사
+python your_script.py --imgsz 640 320
+Enable Result Visualization:
+
+bash
+복사
+python your_script.py --view-img
+Save Detection Results as Text and CSV Files:
+
+bash
+복사
+python your_script.py --save-txt --save-csv
+For a complete list of options, run:
+
+bash
+복사
+python your_script.py --help
+Code Structure
+Main Script: Contains the detection loop and GPIO control logic.
+Modules Imported:
+YOLOv5 Utilities: For model loading, image processing, and plotting.
+Hardware Control: Using the RPi.GPIO library for interfacing with the servo, buzzer, and LEDs.
+Output:
+Images/Videos: Processed images are saved with detection overlays.
+Labels: Detection results are saved as text files and CSV files in the specified output directory.
+Notes
+Testing: Always test the system in a controlled environment to ensure safety and prevent hardware damage.
+GPIO Cleanup: The script attempts to clean up GPIO resources on exit (using GPIO.cleanup()). However, verify that all GPIO pins are reset properly after execution.
+Customization: You can modify the password sequence and hardware action responses based on your project requirements.
+License
+This project is licensed under the MIT License.
+
+vbnet
+복사
+
+This README uses Markdown formatting to clearly outline the project details, features, hardware setup
