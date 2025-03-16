@@ -1,75 +1,55 @@
-# YOLOv5 Object Detection with Raspberry Pi
+# Universal Doorlock
 
-This project utilizes **YOLOv5** for real-time object detection on a **Raspberry Pi**. The system is integrated with **servo motors**, **LEDs**, and a **buzzer** to trigger actions when specific objects are detected. Detected object data is saved in a **CSV file** for further analysis.
-# 1. Project Overview
-This project leverages YOLOv5 for real-time object detection on a Raspberry Pi. The system activates LEDs, a buzzer, and controls a servo motor when specific objects are detected. It also logs detected object information into a CSV file for further analysis.
+**유니버셜 도어락**은 YOLOv5 기반의 손동작 인식을 통해 도어락의 잠금 해제를 구현한 시스템입니다. 본 프로젝트는 터치 방식의 단점을 보완하여 시각 장애인 등 다양한 사용자가 보다 안전하고 위생적으로 도어락을 사용할 수 있도록 설계되었습니다.
 
-## Features
+---
 
-- Real-time object detection using **YOLOv5**.
-- GPIO control for **servo motors**, **LEDs**, and **buzzer** on the Raspberry Pi.
-- Logging detected object information to a **CSV file**.
-- Triggering actions based on specific object detections.
+## 목차
 
-## Requirements
+- [프로젝트 개요](#프로젝트-개요)
+- [주요 기능](#주요-기능)
+- [하드웨어 설정](#하드웨어-설정)
+- [시스템 설계 및 구현](#시스템-설계-및-구현)
+- [실행 방법](#실행-방법)
+- [출력 및 로깅](#출력-및-로깅)
+- [참고 자료](#참고-자료)
+- [라이선스](#라이선스)
+- [기여 및 연락처](#기여-및-연락처)
 
-### Hardware
-- **Raspberry Pi** (any version with GPIO support)
-- **Servo Motor**
-- **LEDs**
-- **Buzzer**
-- **Webcam** (for object detection)
-  
-### Software Dependencies
+---
 
-Run the following commands to install the necessary packages:
+## 프로젝트 개요
 
-```bash
-## 2. Features
-Object Detection: Real-time object detection using YOLOv5.
-GPIO Control: Control servo motors, LEDs, and buzzer using Raspberry Pi GPIO.
-CSV Logging: Detected object names and confidence levels are logged to a CSV file.
-Action Triggers: Recognizes specific objects and triggers predefined actions.
-## 3. Environment Setup
-(1) Install Required Packages
-Install the necessary dependencies for object detection and Raspberry Pi GPIO control:
+본 프로젝트는 딥러닝 기반 객체 탐지 알고리즘인 **YOLOv5**를 활용하여 카메라로 손동작을 실시간 인식하고, 사전에 정해진 손동작 순서(예: "A", "K", "I")가 감지되면 도어락을 해제하는 시스템입니다.  
+이 시스템은 다음과 같은 문제점을 개선합니다:
 
-```bash
+- **보안 문제:** 기존 터치 방식은 지문 및 카메라를 통한 비인가 접근의 위험이 있으나, 본 시스템은 손동작으로 잠금을 해제하여 보안성을 강화합니다.
+- **위생 문제:** 여러 사용자가 직접 접촉하지 않고 비접촉 방식으로 도어락을 제어하여 위생 문제를 해결합니다.
 
-pip install torch torchvision torchaudio
-pip install opencv-python numpy pandas
-pip install RPi.GPIO
+---
 
-YOLOv5 Installation
-Clone the YOLOv5 repository and install the required dependencies:
+## 주요 기능
 
-```bash
-(2) Download YOLOv5 and Install Dependencies
-Clone the YOLOv5 repository and install required dependencies:
-```
+- **실시간 손동작 인식:** 카메라로 입력된 영상을 통해 YOLOv5 모델로 손동작을 인식합니다.
+- **비밀번호 입력:** 인식된 손동작(예: "A", "K", "I")을 순차적으로 비밀번호로 사용하며, 올바른 순서대로 입력되면 도어락이 해제됩니다.
+- **시각 및 청각 피드백:** 
+  - **"A" 인식 시:** LED1 점등, 200Hz의 부저 소리 출력  
+  - **"K" 인식 시:** LED3 점등, 300Hz의 부저 소리 출력  
+  - **"I" 인식 시:** LED1 점등, 400Hz의 부저 소리 출력  
+  - **시간 초과 또는 잘못된 입력 시:** LED2 점등, 500Hz의 부저 소리 출력 후 비밀번호 초기화
+- **결과 저장:** 감지된 객체의 라벨과 신뢰도를 `predictions.csv` 파일에 기록하며, 이미지 결과는 `runs/detect/exp/` 디렉토리에 저장됩니다.
 
-```bash
+---
 
-git clone https://github.com/ultralytics/yolov5.git
-cd yolov5
-pip install -r requirements.txt
-```
+## 하드웨어 설정
 
-Setup
-GPIO Pin Connections
-4. How to Run
-(1) Run Object Detection
-Execute the following command to start object detection using the YOLOv5 model. The webcam (or other input sources) will be used for detection:
+### 주요 부품
 
-```bash
-python detect.py --weights yolov5s.pt --source 0
-Options:
---weights yolov5s.pt: Specifies the YOLOv5 pre-trained model.
---source 0: Uses the webcam as the input source (you can replace 0 with a video file path).
-```
+- **Raspberry Pi 4** (본 시스템의 제어 및 모델 추론)
+- **웹캠** (실시간 영상 입력)
+- **LED, 피에조 부저, 서보 모터** (시각/청각 피드백 및 도어락 동작 제어)
 
-(2) Raspberry Pi GPIO Pin Connections
-Connect the following components to the GPIO pins on the Raspberry Pi:
+### GPIO 핀 연결
 
 | Component    | GPIO Pin |
 |--------------|----------|
@@ -79,50 +59,51 @@ Connect the following components to the GPIO pins on the Raspberry Pi:
 | LED 2        | 27       |
 | LED 3        | 22       |
 
-# YOLOv5 Object Detection with Raspberry Pi GPIO Control
+*모든 핀은 BCM 번호 체계를 사용합니다.*
 
-## How to Run
+---
 
-### Run Object Detection
+## 시스템 설계 및 구현
 
-Execute the following command to start object detection:
+### 설계 개요
+
+1. **YOLOv5 기반 손동작 인식:**  
+   카메라로 입력된 영상에서 손동작을 실시간으로 탐지합니다.  
+   - 모델 학습은 Roboflow에서 제공하는 전처리된 손동작 데이터셋을 사용하여 진행되었습니다.
+   - YOLOv5 모델은 Colab 환경에서 학습 후, Raspberry Pi에서 추론을 수행합니다.
+
+2. **GPIO 제어:**  
+   - **LED, 부저, 서보 모터 제어:** 손동작 인식 결과에 따라 각 장치가 동작하도록 설정하였습니다.
+   - **시간 제한:** 일정 시간 동안 올바른 입력이 없는 경우, 경고 신호(LED2 및 500Hz 부저)가 출력되고 비밀번호 입력이 초기화됩니다.
+
+3. **비밀번호 검증:**  
+   인식된 손동작 라벨을 순서대로 비밀번호로 판단하여, 올바른 순서("A" → "K" → "I")로 입력되면 도어락(서보 모터)이 해제됩니다.
+
+### 구현 방법
+
+- **데이터셋 다운로드:**  
+  Roboflow에서 손동작 이미지 데이터셋을 다운로드 및 전처리.
+  
+- **YOLOv5 모델 학습:**  
+  Colab 환경에서 YOLOv5 학습 스크립트를 통해 모델 학습 진행.
+  
+- **GPIO 설정 및 제어:**  
+  Raspberry Pi의 GPIO 라이브러리를 사용하여 각 장치의 핀 설정 및 제어 구현.
+  
+- **추론 및 결과 저장:**  
+  객체 감지 결과를 실시간으로 출력하며, 감지 결과는 CSV 파일과 이미지 파일로 저장.
+
+---
+
+## 실행 방법
+
+### 실행 명령어
+
+다음 명령어를 실행하여 객체 탐지 및 도어락 제어 시스템을 시작합니다:
 
 ```bash
 python detect.py --weights yolov5s.pt --source 0
-Options:
+옵션 설명:
 
---weights yolov5s.pt: Specifies the YOLO model (you can use pre-trained models).
---source 0: Uses the webcam as the input source (file paths can also be specified).
-Trigger Actions Based on Detected Objects
-If "A" is detected:
-LED1 turns on, and the buzzer sounds.
-If "K" is detected:
-LED3 turns on, and the servo motor moves.
-If a time limit is exceeded:
-LED2 turns on, and the buzzer activates before resetting.
-Saving Detected Object Information
-Detected object names and confidence levels are saved in a predictions.csv file.
-Output and Logging
-Detected objects are saved in the runs/detect/exp/ directory.
-The predictions.csv file logs object names and confidence levels for further analysis.
-References
-YOLOv5 Official Documentation
-Raspberry Pi GPIO Setup
-License
-This project is licensed under the MIT License - see the LICENSE file for details.
-
-Working Principle
-Start Object Detection
-The YOLOv5 model is used for real-time object detection.
-It classifies objects and returns predictions along with their confidence levels.
-Trigger Actions Based on Detected Objects
-Object "A" detected: Turn on LED1 and activate the buzzer.
-Object "K" detected: Turn on LED3 and move the servo motor.
-Time Limit Exceeded: (e.g., no object detected for a while): Turn on LED2 and activate the buzzer before resetting.
-Save Detected Object Information
-All detected object names and their confidence levels are logged into a predictions.csv file.
-Output and Logging
-Detected objects are stored in the runs/detect/exp/ directory.
-The predictions.csv file contains logs of all detected objects, including their names and confidence scores.
-Code for Object Detection and GPIO Control
-Below is the Python code that integrates YOLOv5 object detection with Raspberry Pi GPIO control:
+--weights yolov5s.pt: 사전 학습된 YOLOv5 모델 파일 지정
+--source 0: 웹캠을 입력 소스로 사용 (파일 경로를 지정할 수도 있음)
