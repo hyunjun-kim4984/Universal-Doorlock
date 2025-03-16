@@ -1,55 +1,64 @@
 # Universal Doorlock
 
-**유니버셜 도어락**은 YOLOv5 기반의 손동작 인식을 통해 도어락의 잠금 해제를 구현한 시스템입니다. 본 프로젝트는 터치 방식의 단점을 보완하여 시각 장애인 등 다양한 사용자가 보다 안전하고 위생적으로 도어락을 사용할 수 있도록 설계되었습니다.
+**Universal Doorlock** is a system that implements door unlocking through hand gesture recognition based on YOLOv5. This project addresses the limitations of touch-based systems, offering a safer and more hygienic door access solution for a diverse range of users, including visually impaired individuals.
 
 ---
 
-## 목차
+## Table of Contents
 
-- [프로젝트 개요](#프로젝트-개요)
-- [주요 기능](#주요-기능)
-- [하드웨어 설정](#하드웨어-설정)
-- [시스템 설계 및 구현](#시스템-설계-및-구현)
-- [실행 방법](#실행-방법)
-- [출력 및 로깅](#출력-및-로깅)
-- [참고 자료](#참고-자료)
-- [라이선스](#라이선스)
-- [기여 및 연락처](#기여-및-연락처)
-
----
-
-## 프로젝트 개요
-
-본 프로젝트는 딥러닝 기반 객체 탐지 알고리즘인 **YOLOv5**를 활용하여 카메라로 손동작을 실시간 인식하고, 사전에 정해진 손동작 순서(예: "A", "K", "I")가 감지되면 도어락을 해제하는 시스템입니다.  
-이 시스템은 다음과 같은 문제점을 개선합니다:
-
-- **보안 문제:** 기존 터치 방식은 지문 및 카메라를 통한 비인가 접근의 위험이 있으나, 본 시스템은 손동작으로 잠금을 해제하여 보안성을 강화합니다.
-- **위생 문제:** 여러 사용자가 직접 접촉하지 않고 비접촉 방식으로 도어락을 제어하여 위생 문제를 해결합니다.
+- [Project Overview](#project-overview)
+- [Key Features](#key-features)
+- [Hardware Setup](#hardware-setup)
+- [System Design and Implementation](#system-design-and-implementation)
+- [How to Run](#how-to-run)
+- [Output and Logging](#output-and-logging)
+- [References](#references)
+- [License](#license)
+- [Contributing and Contact](#contributing-and-contact)
 
 ---
 
-## 주요 기능
+## Project Overview
 
-- **실시간 손동작 인식:** 카메라로 입력된 영상을 통해 YOLOv5 모델로 손동작을 인식합니다.
-- **비밀번호 입력:** 인식된 손동작(예: "A", "K", "I")을 순차적으로 비밀번호로 사용하며, 올바른 순서대로 입력되면 도어락이 해제됩니다.
-- **시각 및 청각 피드백:** 
-  - **"A" 인식 시:** LED1 점등, 200Hz의 부저 소리 출력  
-  - **"K" 인식 시:** LED3 점등, 300Hz의 부저 소리 출력  
-  - **"I" 인식 시:** LED1 점등, 400Hz의 부저 소리 출력  
-  - **시간 초과 또는 잘못된 입력 시:** LED2 점등, 500Hz의 부저 소리 출력 후 비밀번호 초기화
-- **결과 저장:** 감지된 객체의 라벨과 신뢰도를 `predictions.csv` 파일에 기록하며, 이미지 결과는 `runs/detect/exp/` 디렉토리에 저장됩니다.
+This project leverages the deep learning-based object detection algorithm **YOLOv5** to recognize hand gestures in real time using a camera. When a predefined sequence of hand gestures (e.g., "A", "K", "I") is detected, the door is unlocked.  
+The system improves upon existing methods by addressing the following issues:
+
+- **Security Issues:**  
+  Traditional touch-based systems may leave fingerprints and can be vulnerable to unauthorized access through camera surveillance. The hand gesture approach enhances security.
+
+- **Hygiene Issues:**  
+  By eliminating the need for direct contact, the system provides a more hygienic method for door unlocking.
 
 ---
 
-## 하드웨어 설정
+## Key Features
 
-### 주요 부품
+- **Real-time Hand Gesture Recognition:**  
+  Uses the YOLOv5 model to detect hand gestures from the video feed.
 
-- **Raspberry Pi 4** (본 시스템의 제어 및 모델 추론)
-- **웹캠** (실시간 영상 입력)
-- **LED, 피에조 부저, 서보 모터** (시각/청각 피드백 및 도어락 동작 제어)
+- **Password Input:**  
+  Recognized gestures (e.g., "A", "K", "I") are sequentially used as a password; the door unlocks when the correct sequence is detected.
 
-### GPIO 핀 연결
+- **Visual and Audio Feedback:**  
+  - **When "A" is detected:** LED1 lights up, and the buzzer sounds at 200Hz.  
+  - **When "K" is detected:** LED3 lights up, and the buzzer sounds at 300Hz.  
+  - **When "I" is detected:** LED1 lights up, and the buzzer sounds at 400Hz.  
+  - **On timeout or incorrect input:** LED2 lights up, and the buzzer sounds at 500Hz before the password input is reset.
+
+- **Result Logging:**  
+  Detected object labels and their confidence scores are recorded in a `predictions.csv` file, and the result images are saved in the `runs/detect/exp/` directory.
+
+---
+
+## Hardware Setup
+
+### Key Components
+
+- **Raspberry Pi 4** (for control and model inference)
+- **Webcam** (for real-time video input)
+- **LEDs, Piezo Buzzer, Servo Motor** (for visual/audio feedback and door lock control)
+
+### GPIO Pin Connections
 
 | Component    | GPIO Pin |
 |--------------|----------|
@@ -59,95 +68,100 @@
 | LED 2        | 27       |
 | LED 3        | 22       |
 
-*모든 핀은 BCM 번호 체계를 사용합니다.*
+*All pins use the BCM numbering system.*
 
 ---
 
-## 시스템 설계 및 구현
+## System Design and Implementation
 
-### 설계 개요
+### Design Overview
 
-1. **YOLOv5 기반 손동작 인식:**  
-   카메라로 입력된 영상에서 손동작을 실시간으로 탐지합니다.  
-   - 모델 학습은 Roboflow에서 제공하는 전처리된 손동작 데이터셋을 사용하여 진행되었습니다.
-   - YOLOv5 모델은 Colab 환경에서 학습 후, Raspberry Pi에서 추론을 수행합니다.
+1. **YOLOv5-based Hand Gesture Recognition:**  
+   The system detects hand gestures in real time from the video input.  
+   - The model is trained using a preprocessed hand gesture dataset provided by Roboflow.
+   - The YOLOv5 model is trained in a Colab environment and then used for inference on the Raspberry Pi.
 
-2. **GPIO 제어:**  
-   - **LED, 부저, 서보 모터 제어:** 손동작 인식 결과에 따라 각 장치가 동작하도록 설정하였습니다.
-   - **시간 제한:** 일정 시간 동안 올바른 입력이 없는 경우, 경고 신호(LED2 및 500Hz 부저)가 출력되고 비밀번호 입력이 초기화됩니다.
+2. **GPIO Control:**  
+   - **Controlling LEDs, Buzzer, and Servo Motor:**  
+     Each device is activated based on the recognized hand gestures.
+   - **Timeout Mechanism:**  
+     If no valid input is detected within a specified time period, a warning is triggered (LED2 and 500Hz buzzer tone) and the password input is reset.
 
-3. **비밀번호 검증:**  
-   인식된 손동작 라벨을 순서대로 비밀번호로 판단하여, 올바른 순서("A" → "K" → "I")로 입력되면 도어락(서보 모터)이 해제됩니다.
+3. **Password Verification:**  
+   The system treats the detected gesture labels as a password. When the correct sequence ("A" → "K" → "I") is input, the door (via the servo motor) is unlocked.
 
-### 구현 방법
+### Implementation Details
 
-- **데이터셋 다운로드:**  
-  Roboflow에서 손동작 이미지 데이터셋을 다운로드 및 전처리.
-  
-- **YOLOv5 모델 학습:**  
-  Colab 환경에서 YOLOv5 학습 스크립트를 통해 모델 학습 진행.
-  
-- **GPIO 설정 및 제어:**  
-  Raspberry Pi의 GPIO 라이브러리를 사용하여 각 장치의 핀 설정 및 제어 구현.
-  
-- **추론 및 결과 저장:**  
-  객체 감지 결과를 실시간으로 출력하며, 감지 결과는 CSV 파일과 이미지 파일로 저장.
+- **Dataset Download:**  
+  Hand gesture image data is downloaded and preprocessed from Roboflow.
+
+- **YOLOv5 Model Training:**  
+  The training script provided by YOLOv5 is executed in a Colab environment to train the model.
+
+- **GPIO Setup and Control:**  
+  The Raspberry Pi's GPIO library is used to configure and control the pins for each device.
+
+- **Inference and Logging:**  
+  The system displays object detection results in real time and saves them to CSV and image files.
 
 ---
 
-## 실행 방법
+## How to Run
 
-### 실행 명령어
+### Execution Command
 
-다음 명령어를 실행하여 객체 탐지 및 도어락 제어 시스템을 시작합니다:
+Run the following command to start the object detection and door lock control system:
 
 ```bash
 python detect.py --weights yolov5s.pt --source 0
 ```
 
+## Option Descriptions
 
-### 옵션 설명:
-
-```
---weights yolov5s.pt: 사전 학습된 YOLOv5 모델 파일 지정
---source 0: 웹캠을 입력 소스로 사용 (파일 경로를 지정할 수도 있음)
-```
-
-## 출력 및 로깅
-
-**결과 이미지:**  
-감지 결과 이미지(또는 영상)는 `runs/detect/exp/` 디렉토리에 저장됩니다.
-
-**로그 파일:**  
-감지된 객체의 라벨 및 신뢰도 정보는 `predictions.csv` 파일에 기록됩니다.
+- `--weights yolov5s.pt`: Specifies the pre-trained YOLOv5 model file.
+- `--source 0`: Uses the webcam as the input source (a file path can also be specified).
 
 ---
 
-## 참고 자료
+## Output and Logging
+
+**Result Images:**  
+Detected result images (or videos) are saved in the `runs/detect/exp/` directory.
+
+**Log File:**  
+Detected object labels and their confidence scores are recorded in the `predictions.csv` file.
+
+---
+
+## References
 
 - [YOLOv5 Official Documentation](https://github.com/ultralytics/yolov5)
 - [Raspberry Pi GPIO Setup](https://www.raspberrypi.org/documentation/usage/gpio/)
-- 관련 튜토리얼 및 블로그 포스트:
-  - Yolov5 환경 세팅 및 학습
-  - Raspberry Pi를 이용한 서보 모터 및 부저 제어
+
+**Related Tutorials and Blog Posts:**
+
+- YOLOv5 Environment Setup and Training
+- Controlling Servo Motors and Buzzers with Raspberry Pi
 
 ---
 
-## 라이선스
+## License
 
-이 프로젝트는 **MIT License** 하에 배포됩니다.
-
----
-
-## 기여 및 연락처
-
-- **한경국립대학교 전기전자제어공학과**
-- **프로젝트 참여자:**
-  - 윤재영 (학번: 2019265088)
-  - 김현준 (학번: 2019265040)
-
-문의사항이나 기여 관련 사항은 프로젝트 저장소의 이슈를 통해 연락해주시기 바랍니다.
+This project is distributed under the **MIT License**.
 
 ---
 
-*이 README 파일은 프로젝트의 개요, 기능, 하드웨어 연결, 시스템 설계 및 구현, 실행 방법, 출력 및 로깅, 참고 자료, 라이선스, 그리고 기여자 정보를 포괄적으로 담고 있습니다. 필요에 따라 내용을 수정하거나 추가하여 사용하시면 됩니다.*
+## Contributing and Contact
+
+**College of Engineering, Hankuk National University**
+
+**Project Contributors:**
+
+- Jaeyoung Yoon (Student ID: 2019265088)
+- Hyunjun Kim (Student ID: 2019265040)
+
+For questions or contribution-related matters, please open an issue in the project repository.
+
+---
+
+*This README file comprehensively covers the project overview, key features, hardware connections, system design and implementation, running instructions, output and logging, references, license, and contributor information. Feel free to modify or add any additional details as necessary.*
