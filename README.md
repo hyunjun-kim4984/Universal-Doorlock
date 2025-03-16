@@ -71,17 +71,21 @@ Options:
 (2) Raspberry Pi GPIO Pin Connections
 Connect the following components to the GPIO pins on the Raspberry Pi:
 
-Component	GPIO Pin
-Servo Motor	12
-Buzzer	13
-LED 1	17
-LED 2	27
-LED 3	22
-How to Run
+| Component    | GPIO Pin |
+|--------------|----------|
+| Servo Motor  | 12       |
+| Buzzer       | 13       |
+| LED 1        | 17       |
+| LED 2        | 27       |
+| LED 3        | 22       |
+
+##How to Run
+
 1. Run Object Detection
 Execute the following command to start object detection:
 ```bash
 python detect.py --weights yolov5s.pt --source 0
+```
 
 Options:
 
