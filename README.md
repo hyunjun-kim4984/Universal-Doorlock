@@ -33,6 +33,7 @@ Action Triggers: Recognizes specific objects and triggers predefined actions.
 ## 3. Environment Setup
 (1) Install Required Packages
 Install the necessary dependencies for object detection and Raspberry Pi GPIO control:
+```
 
 ```bash
 
@@ -42,6 +43,7 @@ pip install RPi.GPIO
 
 YOLOv5 Installation
 Clone the YOLOv5 repository and install the required dependencies:
+```
 
 ```bash
 (2) Download YOLOv5 and Install Dependencies
@@ -80,6 +82,7 @@ LED 3	22
 How to Run
 1. Run Object Detection
 Execute the following command to start object detection:
+
 ```bash
 python detect.py --weights yolov5s.pt --source 0
 
@@ -128,7 +131,8 @@ The predictions.csv file contains logs of all detected objects, including their 
 7. Code for Object Detection and GPIO Control
 Here is the Python code that integrates YOLOv5 object detection with Raspberry Pi GPIO control:
 
-```python
+```
+python
 import torch
 import RPi.GPIO as GPIO
 import time
