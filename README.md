@@ -1,35 +1,41 @@
-# YOLOv5 Object Detection with Raspberry Pi  
+# YOLOv5 Door Unlocking System with GPIO
 
-이 프로젝트는 **YOLOv5**를 활용하여 **Raspberry Pi**에서 실시간 객체 탐지를 수행합니다. 특정 객체가 탐지되면 **서보 모터**, **LED**, **부저**가 작동하도록 설정하였으며, 탐지된 객체 정보는 **CSV 파일**에 저장되어 이후 분석에 활용됩니다.  
+This project integrates the YOLOv5 object detection model with Raspberry Pi GPIO control to create an automated door unlocking system. The system detects specific labels that form a password (in this example, the sequence `A`, `K`, `I`) and, when the correct sequence is detected, actuates a servo motor to unlock a door. Visual and audio feedback is provided using LEDs and a buzzer.
 
----
+## Features
 
-## 📌 프로젝트 개요
-이 프로젝트에서는 Raspberry Pi에서 YOLOv5를 사용해 실시간 객체 탐지를 수행합니다. 특정 객체가 감지되면 LED, 부저 및 서보 모터가 동작하며, 감지된 객체의 정보는 CSV 파일에 기록됩니다.  
+- **Real-Time Object Detection:** Utilizes YOLOv5 for detecting objects from images or video streams.
+- **Password Verification:** Monitors for a specific sequence (`A`, `K`, `I`) to trigger the door unlocking mechanism.
+- **Hardware Integration:** 
+  - **Servo Motor:** Controls door unlocking (connected to GPIO pin 12).
+  - **Buzzer:** Provides audio feedback (connected to GPIO pin 13).
+  - **LEDs:** Indicate system status and error conditions (connected to GPIO pins 17, 27, and 22).
+- **Flexible Input Sources:** Supports images, videos, webcams, and screenshots.
+- **Result Logging:** Saves detection outputs as text and CSV files, and optionally crops detected objects for further review.
+- **Configurable Parameters:** Easily adjust settings like image size, confidence threshold, and detection limits through command-line arguments.
 
----
+## Hardware Setup
 
-## 🚀 주요 기능
-- ✅ **실시간 객체 탐지**: YOLOv5를 활용한 실시간 객체 탐지  
-- ✅ **GPIO 제어**: Raspberry Pi의 GPIO 핀을 통해 서보 모터, LED 및 부저 제어  
-- ✅ **CSV 저장**: 탐지된 객체의 이름 및 신뢰도를 CSV 파일에 저장  
-- ✅ **객체 기반 동작 트리거**: 특정 객체가 감지되면 사전에 설정된 동작 수행  
+- **Raspberry Pi:** Ensure your Raspberry Pi has Python 3.7+ and the RPi.GPIO library installed.
+- **Servo Motor:** Connected to GPIO pin 12.
+- **Buzzer:** Connected to GPIO pin 13.
+- **LEDs:** Connected to GPIO pins 17, 27, and 22.
+- **Camera:** Use a USB camera or the Raspberry Pi Camera Module for capturing images or video streams.
 
----
+> **Note:** Verify that your hardware connections match the pin configuration defined in the source code.
 
-## 🛠️ 준비 사항
+## Requirements
 
-### 💡 **하드웨어**
-- Raspberry Pi (GPIO 지원 버전)  
-- 서보 모터  
-- LED  
-- 부저  
-- 웹캠  
+- Python 3.7 or higher
+- [PyTorch](https://pytorch.org/)
+- [RPi.GPIO](https://pypi.org/project/RPi.GPIO/)
+- OpenCV (`cv2`)
+- Additional dependencies as listed in the `requirements.txt` file (e.g., ultralytics, numpy, etc.)
 
-### 🖥️ **소프트웨어**
-필요한 패키지를 다음 명령어로 설치합니다:
+## Installation
 
-```bash
-pip install torch torchvision torchaudio
-pip install opencv-python numpy pandas
-pip install RPi.GPIO
+1. **Clone the Repository:**
+
+   ```bash
+   git clone https://github.com/yourusername/your-repo.git
+   cd your-repo
