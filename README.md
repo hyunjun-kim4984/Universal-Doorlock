@@ -105,9 +105,10 @@
 python detect.py --weights yolov5s.pt --source 0
 ```
 
-```
-옵션 설명:
 
+###옵션 설명:
+
+```
 --weights yolov5s.pt: 사전 학습된 YOLOv5 모델 파일 지정
 --source 0: 웹캠을 입력 소스로 사용 (파일 경로를 지정할 수도 있음)
 ```
