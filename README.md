@@ -31,6 +31,14 @@ The system improves upon existing methods by addressing the following issues:
 
 ---
 
+---
+## Example
+
+![Image](https://github.com/user-attachments/assets/af1654b7-d81f-46f1-9ceb-4fefe2773ad3)
+
+
+---
+
 ## Key Features
 
 - **Real-time Hand Gesture Recognition:**  
