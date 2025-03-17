@@ -33,11 +33,13 @@ The system improves upon existing methods by addressing the following issues:
 
 ## Demo Screenshots
 
-<img src="https://github.com/user-attachments/assets/af1654b7-d81f-46f1-9ceb-4fefe2773ad3" alt="Image" width="400" height="300">
-
-<img src="https://github.com/user-attachments/assets/7b20a6a8-d24c-4582-8d9b-b1da0df05f42" alt="Image" width="400" height="300">
-
-<img src="https://github.com/user-attachments/assets/92f539ff-ad42-4840-bd79-36db9422b545" alt="Image" width="400" height="300">
+<table>
+  <tr>
+    <td><img src="https://github.com/user-attachments/assets/af1654b7-d81f-46f1-9ceb-4fefe2773ad3" alt="Image 1" width="300"></td>
+    <td><img src="https://github.com/user-attachments/assets/7b20a6a8-d24c-4582-8d9b-b1da0df05f42" alt="Image 2" width="300"></td>
+    <td><img src="https://github.com/user-attachments/assets/92f539ff-ad42-4840-bd79-36db9422b545" alt="Image 3" width="300"></td>
+  </tr>
+</table>
 
 
 ## Key Features
